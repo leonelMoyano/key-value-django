@@ -1,0 +1,41 @@
+<!-- chat/templates/chat/room.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Ws test</title>
+</head>
+<body>
+    <label for="key-message-input">key</label>
+    <input id="key-message-input" type="text">
+    <label for="value-message-input">value</label>
+    <input id="value-message-input" type="text">
+    <input id="storage-submit" type="button" value="Send">
+    <script>
+        // const roomName = JSON.parse(document.getElementById('room-name').textContent);
+
+        const chatSocket = new WebSocket(
+            'ws://'
+            + 'localhost:8000'
+            + '/ws/storage/'
+        );
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#storage-submit').onclick = function(e) {
+            const keyInputDom = document.querySelector('#key-message-input');
+            const key = keyInputDom.value;
+            const valueInputDom = document.querySelector('#value-message-input');
+            const value = valueInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'key': key,
+                'value': value
+            }));
+            valueInputDom.value = '';
+            keyInputDom.value = '';
+        };
+    </script>
+</body>
+</html>
